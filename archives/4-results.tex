@@ -1,0 +1,48 @@
+\chapter{Results}
+
+In this chapter, we will summarise our proposed quantum comparator circuit to Cuccaro's comparator, VBE comparator, and ripple carry comparator generalised from \citep{Sarker2014, Oliveira2006, Beckman1996}. The result we compared were not from their original papers but rather their implementation on superconducting IBM QX device. All candidate comparator circuits were transpiled from circuit model into IBM QX device native gates of arbitrary single qubit and C-Not gate. We also report the 2-qubit comparator running on IBM QX devices.
+
+The reason we do not include QFT based adder in our comparison is due to the fact that depth defined on all QFT based adder literature assumed arbitrary two-qubit gate as having depth one. Implementing QFT based circuit using C-Not as only two qubit gate would increase too much depth and we do not see any reason to compare circuits that were optimised based on different assumptions and goals.
+
+\begin{table}[b]
+    \centering
+        \begingroup
+        \renewcommand*{\arraystretch}{1.7}
+        % \renewcommand{\arraystretch}{1.7}
+        \begin{tabular}{|| c || C{1.5cm} | C{1.5cm} | C{1.5cm} | C{3cm} ||} 
+            \hline
+            Adder               & Number of bits & Number of anc. bits & C-Not count & Qiskit cost \\ [0.5ex] 
+            \hline\hline
+            Proposed circuit    & $2n$  & $1$   & $10n+1$       & $108n+10$ \\
+            \hline
+            VBE                 & $2n$  & $n$   & $28n-14$      & $312n-156$ \\
+            \hline
+            Cuccaro             & $2n$  & $1$   & $16n-5$       & $176n+10$ \\
+            \hline
+            Ripple Comparator   & $2n$  & $n$   & $O({n^2})$    & $O({n^2})$ \\ [1ex]
+            \hline  
+            
+        \end{tabular}
+        \endgroup
+    
+    \caption[Circuit cost summary]{Circuit cost summary for $n \geq 3$. We then listed number of input bits, number of ancilla bits, C-Not count, and Qiskit cost. We do not include the complementing step but only the high bit finding part.}
+    \label{tab:compresult}
+\end{table}
+
+We tested our proposed 2-bit quantum comparator circuit with Grover's algorithm by setting search threshold to be 2. We do one Grover iteration for the comparison step which in the ideal scenario, should output 00011 with 100\% of the time. We tested the same circuit on three devices; ibmq\_vigo, ibmq\_ourense and ibmqx2 (5-qubit backend: IBM Q team, "ibmqx2 v2.0.1", "ibmq\_vigo v1.0.2", "ibmq\_ourense v1.0.1", (2019). Retrieved from https://quantum-computing.ibm.com) with 8196 shots per device. As we can see slightly in computation result, it seems to have a correlated output 00001 and 00011 higher than the rest. Our assumptions on the outcome is that since the fourth output bit of all devices has short decoherence time (both T1 and T2) the 1 in the fourth bit might lose its 1 component before computation ends.
+
+\begin{figure}[h]
+    \includegraphics[width=\linewidth]{Figures/vigo-rcomp.png}
+    \caption{Proposed circuit result from ibmq\_vigo }
+    \label{fig:vigorcomp}
+\end{figure}
+\begin{figure}[h]
+    \includegraphics[width=\linewidth]{Figures/ourense-rcomp.png}
+    \caption{Proposed circuit result from ibmq\_ourense}
+    \label{fig:ourensercomp}
+\end{figure}
+\begin{figure}[t]
+    \includegraphics[width=\linewidth]{Figures/ibmqx2-rcomp.png}
+    \caption{Proposed circuit result from ibmqx2}
+    \label{fig:ibmqx2rcomp}
+\end{figure}
