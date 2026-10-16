@@ -43,6 +43,7 @@
 การรู้จำเสียงพูดอัตโนมัติ (Automatic Speech Recognition: ASR) คือการแปลงสัญญาณเสียงพูดเป็นข้อความ แบบจำลองที่ใช้อย่างแพร่หลายในปัจจุบัน 
 ได้แก่ Whisper \citep{Radford2023} ซึ่งเป็น Transformer แบบตัวเข้ารหัส-ตัวถอดรหัส (encoder-decoder) ที่รับสเปกโตรแกรม log-Mel
 ของสัญญาณเสียงช่วงละ 30 วินาที และสร้างข้อความทีละโทเค็นแบบถดถอยในตัว (autoregressive) ดังรูปที่~\ref{fig:whisper_large_v3}
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/whisper_large_v3.png}
@@ -71,6 +72,26 @@ Typhoon Whisper Turbo มีค่า CER ร้อยละ 4.79 และ 6.85
 มากกว่าแบบต่อเนื่องตามเวลาจริง (streaming) \citep{TyphoonWhisperTurbo} ซึ่งสอดคล้องกับระบบที่บันทึกคำตอบของผู้ป่วยทีละข้อก่อนถอดเสียง
 ทั้งนี้ ผลลัพธ์ของแบบจำลองอยู่ในรูปคำอ่าน เช่น ``สิบ'' แทน ``10'' \citep{Sirichotedumrong2026} ซึ่งส่วนตีความคำตอบต้องรองรับ
 
+\subsubsection{การสังเคราะห์เสียงพูด}
+
+การสังเคราะห์เสียงพูด (Text-to-Speech: TTS) คือการแปลงข้อความเป็นเสียงพูด
+OmniVoice \citep{Zhu2026OmniVoice} เป็นแบบจำลอง TTS แบบ zero-shot ที่รองรับมากกว่า 600 ภาษา รวมถึงภาษาไทย
+โดยใช้ Transformer แบบสองทิศทาง (bidirectional) ที่เริ่มต้นจากค่าน้ำหนักของ Qwen3-0.6B
+แปลงข้อความเป็นโทเค็นเสียงหลายชุดรหัส (multi-codebook acoustic tokens) โดยตรงแบบไม่ถดถอยในตัว (non-autoregressive) ดังรูปที่~\ref{fig:omni_voice_ar}
+
+\newpage
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/omni_voice_architecture.png}
+\caption{สถาปัตยกรรมของแบบจำลอง OmniVoice \citep{Zhu2026OmniVoice}}
+\label{fig:omni_voice_ar}
+\end{figure}
+
+แบบจำลองถูกฝึกด้วยข้อมูลเสียงจากแหล่งเปิด 581,000 ชั่วโมง ซึ่งเป็นภาษาไทยประมาณ 10,500 ชั่วโมง
+และเสียงภาษาไทยที่สร้างขึ้นมีค่า CER เท่ากับร้อยละ 1.23 บนชุดทดสอบ FLEURS ใกล้เคียงกับเสียงจริง (ร้อยละ 1.45) \citep{Zhu2026OmniVoice}
+งานวิจัยนี้ใช้ OmniVoice สร้างเสียงคำถาม เสียงขอให้ตอบใหม่ และเสียงอ่านตัวเลือกไว้ล่วงหน้า และตรวจฟังก่อนนำไปใช้
+เพื่อให้ผู้ป่วยทุกคนได้ยินถ้อยคำและการออกเสียงเดียวกัน
 
 \subsubsection{แบบจำลองภาษาขนาดใหญ่ Qwen3.5}
 \label{sec:qwen35}
